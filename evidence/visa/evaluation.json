@@ -1,0 +1,305 @@
+{
+  "dataset": "VisA_20220922",
+  "source": "https://github.com/amazon-science/spot-diff",
+  "split_sha256": "a48557e6033318cb90556f706196bc9d247a776a23ea51aecee5a80dd0332995",
+  "seed": 42,
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "cpu_threads": 1,
+  "reports": [
+    {
+      "category": "cashew",
+      "method": "handcrafted_patch_nearest_neighbor",
+      "size": 64,
+      "memory": 256,
+      "fit_images": 360,
+      "validation_images": 90,
+      "metrics": {
+        "n": 150,
+        "normal": 50,
+        "anomaly": 100,
+        "auroc": 0.7894,
+        "average_precision": 0.8576880774482529,
+        "normal_false_alert_rate": 0.08,
+        "anomaly_detection_rate": 0.32,
+        "threshold": 1.1782323609109566,
+        "auroc_bootstrap_95": [
+          0.6977106227106227,
+          0.8755258571960252
+        ]
+      },
+      "median_ms": 15.592975999879854,
+      "p95_ms": 19.00015280000388,
+      "seconds": 10.6183074569999,
+      "memory_artifact_bytes_before_embedded_report": 87588
+    },
+    {
+      "category": "cashew",
+      "method": "handcrafted_patch_nearest_neighbor",
+      "size": 128,
+      "memory": 1000,
+      "fit_images": 360,
+      "validation_images": 90,
+      "metrics": {
+        "n": 150,
+        "normal": 50,
+        "anomaly": 100,
+        "auroc": 0.6714,
+        "average_precision": 0.7976481038622213,
+        "normal_false_alert_rate": 0.1,
+        "anomaly_detection_rate": 0.26,
+        "threshold": 1.9166950737061388,
+        "auroc_bootstrap_95": [
+          0.5738481768225545,
+          0.7674308959694989
+        ]
+      },
+      "median_ms": 18.855885999983002,
+      "p95_ms": 19.882274450014844,
+      "seconds": 13.05620559199997,
+      "memory_artifact_bytes_before_embedded_report": 135204
+    },
+    {
+      "category": "cashew",
+      "method": "global_RGB_distance_reference",
+      "metrics": {
+        "n": 150,
+        "normal": 50,
+        "anomaly": 100,
+        "auroc": 0.9628,
+        "average_precision": 0.9742774295434016,
+        "normal_false_alert_rate": 0.1,
+        "anomaly_detection_rate": 1.0,
+        "threshold": 0.02775164776281975,
+        "auroc_bootstrap_95": [
+          0.9138231465385421,
+          0.9926406302906193
+        ]
+      }
+    },
+    {
+      "category": "cashew",
+      "method": "handcrafted_patch_nearest_neighbor",
+      "size": 256,
+      "memory": 1000,
+      "fit_images": 360,
+      "validation_images": 90,
+      "metrics": {
+        "n": 150,
+        "normal": 50,
+        "anomaly": 100,
+        "auroc": 0.7065999999999999,
+        "average_precision": 0.832240588798276,
+        "normal_false_alert_rate": 0.06,
+        "anomaly_detection_rate": 0.25,
+        "threshold": 2.5615887110303888,
+        "auroc_bootstrap_95": [
+          0.6233143986032642,
+          0.783354516669771
+        ]
+      },
+      "median_ms": 33.47891700013861,
+      "p95_ms": 40.22508409982492,
+      "seconds": 21.15740186899984,
+      "memory_artifact_bytes_before_embedded_report": 135205
+    },
+    {
+      "category": "capsules",
+      "method": "handcrafted_patch_nearest_neighbor",
+      "size": 64,
+      "memory": 256,
+      "fit_images": 434,
+      "validation_images": 108,
+      "metrics": {
+        "n": 160,
+        "normal": 60,
+        "anomaly": 100,
+        "auroc": 0.616,
+        "average_precision": 0.7502515725087447,
+        "normal_false_alert_rate": 0.0,
+        "anomaly_detection_rate": 0.14,
+        "threshold": 1.2682139297247332,
+        "auroc_bootstrap_95": [
+          0.517897465437788,
+          0.7011772233632063
+        ]
+      },
+      "median_ms": 17.333314999859795,
+      "p95_ms": 20.440404050305002,
+      "seconds": 12.676713114999984,
+      "memory_artifact_bytes_before_embedded_report": 103024
+    },
+    {
+      "category": "capsules",
+      "method": "handcrafted_patch_nearest_neighbor",
+      "size": 128,
+      "memory": 1000,
+      "fit_images": 434,
+      "validation_images": 108,
+      "metrics": {
+        "n": 160,
+        "normal": 60,
+        "anomaly": 100,
+        "auroc": 0.6451666666666666,
+        "average_precision": 0.7559757853657061,
+        "normal_false_alert_rate": 0.03333333333333333,
+        "anomaly_detection_rate": 0.12,
+        "threshold": 1.3472640011277757,
+        "auroc_bootstrap_95": [
+          0.5612022657635866,
+          0.7213160125006622
+        ]
+      },
+      "median_ms": 21.37931449988173,
+      "p95_ms": 23.45794545001354,
+      "seconds": 15.736726277999878,
+      "memory_artifact_bytes_before_embedded_report": 150640
+    },
+    {
+      "category": "capsules",
+      "method": "global_RGB_distance_reference",
+      "metrics": {
+        "n": 160,
+        "normal": 60,
+        "anomaly": 100,
+        "auroc": 0.5063333333333333,
+        "average_precision": 0.6950103533473897,
+        "normal_false_alert_rate": 0.0,
+        "anomaly_detection_rate": 0.09,
+        "threshold": 0.06208630915807992,
+        "auroc_bootstrap_95": [
+          0.4206366796196574,
+          0.601289273567962
+        ]
+      }
+    },
+    {
+      "category": "capsules",
+      "method": "handcrafted_patch_nearest_neighbor",
+      "size": 256,
+      "memory": 1000,
+      "fit_images": 434,
+      "validation_images": 108,
+      "metrics": {
+        "n": 160,
+        "normal": 60,
+        "anomaly": 100,
+        "auroc": 0.6446666666666667,
+        "average_precision": 0.7449378636219786,
+        "normal_false_alert_rate": 0.06666666666666667,
+        "anomaly_detection_rate": 0.16,
+        "threshold": 2.158877025363693,
+        "auroc_bootstrap_95": [
+          0.5581548822520734,
+          0.7247130303512604
+        ]
+      },
+      "median_ms": 33.49780849976014,
+      "p95_ms": 36.2361762001683,
+      "seconds": 25.511885966000136,
+      "memory_artifact_bytes_before_embedded_report": 150641
+    },
+    {
+      "category": "pcb1",
+      "method": "handcrafted_patch_nearest_neighbor",
+      "size": 64,
+      "memory": 256,
+      "fit_images": 724,
+      "validation_images": 180,
+      "metrics": {
+        "n": 200,
+        "normal": 100,
+        "anomaly": 100,
+        "auroc": 0.7827000000000001,
+        "average_precision": 0.7638958732100446,
+        "normal_false_alert_rate": 0.09,
+        "anomaly_detection_rate": 0.27,
+        "threshold": 0.8310820665690677,
+        "auroc_bootstrap_95": [
+          0.71177850270543,
+          0.8496029714786786
+        ]
+      },
+      "median_ms": 14.978301000155625,
+      "p95_ms": 16.076242649933192,
+      "seconds": 16.34825993100003,
+      "memory_artifact_bytes_before_embedded_report": 157517
+    },
+    {
+      "category": "pcb1",
+      "method": "handcrafted_patch_nearest_neighbor",
+      "size": 128,
+      "memory": 1000,
+      "fit_images": 724,
+      "validation_images": 180,
+      "metrics": {
+        "n": 200,
+        "normal": 100,
+        "anomaly": 100,
+        "auroc": 0.7374,
+        "average_precision": 0.717459383122674,
+        "normal_false_alert_rate": 0.08,
+        "anomaly_detection_rate": 0.29,
+        "threshold": 1.1665709935191666,
+        "auroc_bootstrap_95": [
+          0.6682873149259704,
+          0.8047470012481448
+        ]
+      },
+      "median_ms": 19.25824099998863,
+      "p95_ms": 20.533811500217777,
+      "seconds": 20.73041980400012,
+      "memory_artifact_bytes_before_embedded_report": 205133
+    },
+    {
+      "category": "pcb1",
+      "method": "global_RGB_distance_reference",
+      "metrics": {
+        "n": 200,
+        "normal": 100,
+        "anomaly": 100,
+        "auroc": 0.8003,
+        "average_precision": 0.8457353161865576,
+        "normal_false_alert_rate": 0.0,
+        "anomaly_detection_rate": 0.34,
+        "threshold": 0.03694139578058597,
+        "auroc_bootstrap_95": [
+          0.7333391008475277,
+          0.8617486239295236
+        ]
+      }
+    },
+    {
+      "category": "pcb1",
+      "method": "handcrafted_patch_nearest_neighbor",
+      "size": 256,
+      "memory": 1000,
+      "fit_images": 724,
+      "validation_images": 180,
+      "metrics": {
+        "n": 200,
+        "normal": 100,
+        "anomaly": 100,
+        "auroc": 0.6063,
+        "average_precision": 0.6518686858376752,
+        "normal_false_alert_rate": 0.02,
+        "anomaly_detection_rate": 0.12,
+        "threshold": 1.8721825141569501,
+        "auroc_bootstrap_95": [
+          0.5223112061981896,
+          0.6796392011240465
+        ]
+      },
+      "median_ms": 33.236172499982786,
+      "p95_ms": 34.86252509976566,
+      "seconds": 37.05573301100003,
+      "memory_artifact_bytes_before_embedded_report": 205134
+    }
+  ],
+  "limitations": [
+    "Handcrafted baseline, not neural PatchCore",
+    "Three categories only",
+    "No pixel metric or factory validation",
+    "Single-host timings",
+    "Bootstrap images may not be independent acquisitions"
+  ]
+}

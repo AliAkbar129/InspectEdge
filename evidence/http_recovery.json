@@ -1,0 +1,15 @@
+{
+  "scenario": "Real-image inference, unavailable central, edge SIGKILL, restart, HTTP sync and empty retry",
+  "image_sha256": "5de461535f04175ac89dde90c4d662894aec6eef8ba946b6bc521ddeb5bdf885",
+  "model_sha256": "bee762a42bbb3a2613a4770d79e3b94fc6ecbd0543b057a1f32878672b3912f7",
+  "model_mode": "visa",
+  "accepted_inspections": 3,
+  "unique_central_inspections": 3,
+  "pending_after_sync": 0,
+  "payload_match": true,
+  "limitations": [
+    "Three repeated uploads of one real image; not three independent defect cases",
+    "One localhost recovery scenario",
+    "Kill occurs after committed records, not during SQLite commit"
+  ]
+}

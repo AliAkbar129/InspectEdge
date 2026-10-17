@@ -1,0 +1,96 @@
+{
+  "dataset": "VisA_20220922",
+  "source": "https://github.com/amazon-science/spot-diff",
+  "split_sha256": "a48557e6033318cb90556f706196bc9d247a776a23ea51aecee5a80dd0332995",
+  "seed": 42,
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "cpu_threads": 1,
+  "neural": true,
+  "reports": [
+    {
+      "category": "cashew",
+      "method": "frozen_resnet18_patch_nearest_neighbor",
+      "size": 128,
+      "memory": 1000,
+      "fit_images": 360,
+      "validation_images": 90,
+      "metrics": {
+        "n": 150,
+        "normal": 50,
+        "anomaly": 100,
+        "auroc": 0.8566,
+        "average_precision": 0.931538958072864,
+        "normal_false_alert_rate": 0.06,
+        "anomaly_detection_rate": 0.61,
+        "threshold": 19.833607196807858,
+        "auroc_bootstrap_95": [
+          0.7980002228163994,
+          0.9119087054206504
+        ]
+      },
+      "median_ms": 27.334403499935434,
+      "p95_ms": 29.115954749818222,
+      "seconds": 16.898396176999995,
+      "memory_artifact_bytes_before_embedded_report": 1616292
+    },
+    {
+      "category": "capsules",
+      "method": "frozen_resnet18_patch_nearest_neighbor",
+      "size": 128,
+      "memory": 1000,
+      "fit_images": 434,
+      "validation_images": 108,
+      "metrics": {
+        "n": 160,
+        "normal": 60,
+        "anomaly": 100,
+        "auroc": 0.6839999999999999,
+        "average_precision": 0.7943899336559546,
+        "normal_false_alert_rate": 0.03333333333333333,
+        "anomaly_detection_rate": 0.22,
+        "threshold": 24.156527709960937,
+        "auroc_bootstrap_95": [
+          0.5938305462653289,
+          0.7630875
+        ]
+      },
+      "median_ms": 26.150398500021765,
+      "p95_ms": 28.16187874987008,
+      "seconds": 17.861144909999894,
+      "memory_artifact_bytes_before_embedded_report": 1631728
+    },
+    {
+      "category": "pcb1",
+      "method": "frozen_resnet18_patch_nearest_neighbor",
+      "size": 128,
+      "memory": 1000,
+      "fit_images": 724,
+      "validation_images": 180,
+      "metrics": {
+        "n": 200,
+        "normal": 100,
+        "anomaly": 100,
+        "auroc": 0.8724999999999999,
+        "average_precision": 0.828623915455428,
+        "normal_false_alert_rate": 0.14,
+        "anomaly_detection_rate": 0.59,
+        "threshold": 16.66883974075317,
+        "auroc_bootstrap_95": [
+          0.8229348961749805,
+          0.9162959062512138
+        ]
+      },
+      "median_ms": 26.611997500140205,
+      "p95_ms": 33.09982504972595,
+      "seconds": 28.686360955000055,
+      "memory_artifact_bytes_before_embedded_report": 1686221
+    }
+  ],
+  "limitations": [
+    "Three categories only",
+    "No pixel metric or factory validation",
+    "Single-host timings",
+    "Bootstrap images may not be independent acquisitions",
+    "Frozen pretrained features are not finetuned; this is not a full PatchCore implementation"
+  ]
+}

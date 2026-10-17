@@ -34,8 +34,35 @@ The shared-key single-station demo is not production device authentication. Keep
 
 ## Verification boundary
 
-Tests exercise normal-only fitting, reproducibility, fit/validation separation, duplicate-image rejection, missing-model behavior and ingestion retries. Real MVTec images were not available during implementation. No factory detection score, pretrained feature extractor, camera throughput, neural comparison, or complete offline failure study is claimed.
+Tests exercise normal-only fitting, reproducibility, fit/validation separation, duplicate-image rejection, missing-model behavior and ingestion retries. MVTec has not been evaluated; the subsequent real-data study uses VisA (see below). No factory deployment, camera-throughput or complete offline failure study is claimed.
 
-Remaining: three-category MVTec evaluation, a properly attributed pretrained patch-feature method, controlled compression experiments, model deployment/rollback, human review, multi-station identity and fault testing.
+Remaining: independent MVTec evaluation, controlled compression experiments, model deployment/rollback, human review, multi-station identity and fault testing.
 
 Original baseline implementation with AI assistance. Uses NumPy, scikit-learn, Pillow, FastAPI and HTTPX under their respective licenses. Dataset terms apply separately.
+
+## Executed real-data study: VisA
+
+The original VisA archive was downloaded and SHA256 verified. Evaluated all official test images in **cashew (150), capsules (160), pcb1 (200)**, with training restricted to their official normal-image training sets. See [protocol](experiments/VISA_PROTOCOL.md), [source attribution](evidence/DATA_SOURCES.json), [all handcrafted settings](evidence/visa/evaluation.json) and [exploratory pretrained comparison](evidence/visa_neural/evaluation.json). Compressed raw predictions and image-hash manifests are alongside each report.
+
+| Category | Handcrafted AUROC, 128/1000 | Frozen ResNet18 patch AUROC | Neural detection rate | Neural false-alert rate |
+|---|---:|---:|---:|---:|
+| Cashew | 0.671 | 0.857 | 61% | 6% |
+| Capsules | 0.645 | 0.684 | 22% | 3.3% |
+| PCB1 | 0.737 | 0.872 | 59% | 14% |
+
+Thresholds were set on normal validation images, not test anomalies. The capsule miss rate is substantial. AUROC is not detection accuracy. Neural results are exploratory follow-ups using the same test sets; independent confirmation is still needed. Reported model file bytes cover the patch-memory artifact before embedding report metadata; the separate ResNet18 backbone is approximately 45 MB and must also be counted for deployment.
+
+Reproduce with Python 3.12:
+
+```bash
+python experiments/download_visa.py --output data/visa
+python experiments/visa_benchmark.py --root data/visa/images --split data/visa/1cls.csv
+python -m pip install -r requirements-neural.txt --extra-index-url https://download.pytorch.org/whl/cpu
+python experiments/visa_benchmark.py --neural --root data/visa/images --split data/visa/1cls.csv --output artifacts/visa_neural
+```
+
+Select a category-specific model explicitly, for example set `INSPECT_MODEL` to `artifacts/visa_neural/cashew_128_1000.joblib` before starting the server. A cashew model is not a general-purpose factory inspector. Optional neural inference requires official pretrained weights, downloaded by torchvision on first use.
+
+### Executed HTTP recovery check
+
+`experiments/http_recovery.py` uploads a real image three times through the trained-model API, confirms local retention while central is unavailable, kills/restarts the edge process, then synchronizes to a separate central process. All three records were retained and their full payloads matched centrally; a repeated sync acknowledged zero new records. See [raw evidence](evidence/http_recovery.json). These are three uploads of one image, not three independent anomaly tests.

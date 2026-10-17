@@ -55,7 +55,7 @@ class Record(BaseModel):
     anomaly:bool
     inference_ms:float=Field(ge=0)
     heatmap:str=Field(max_length=1_000_000)
-    mode:str=Field(pattern='^(mvtec|synthetic_fixture)$')
+    mode:str=Field(pattern='^(mvtec|visa|synthetic_fixture)$')
     model_sha256:str=Field(pattern='^[0-9a-f]{64}$')
     image_sha256:str=Field(pattern='^[0-9a-f]{64}$')
     captured_at:float=Field(ge=0)

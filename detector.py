@@ -16,7 +16,14 @@ def patches(image,size=128):
             dy,dx=np.gradient(patch.mean(2));desc.append(np.r_[patch.mean((0,1)),patch.std((0,1)),np.abs(dx).mean(),np.abs(dy).mean()])
     return np.asarray(desc)
 
-def fit(paths,mode='synthetic_fixture',size=128,memory=1000,seed=42):
+def extract(image,size,kind):
+    if kind=='resnet18_patch':
+        from neural_features import patches as neural_patches
+        return neural_patches(image,size)
+    if kind!='handcrafted':raise ValueError('Unknown feature extractor')
+    return patches(image,size)
+
+def fit(paths,mode='synthetic_fixture',size=128,memory=1000,seed=42,extractor='handcrafted'):
     if size not in [64,128,256] or memory<1:raise ValueError('Invalid size or memory')
     if len(paths)<10:raise ValueError('At least 10 distinct normal images required')
     paths=sorted(map(Path,paths));hashes=[hashlib.sha256(p.read_bytes()).hexdigest() for p in paths]
@@ -24,10 +31,10 @@ def fit(paths,mode='synthetic_fixture',size=128,memory=1000,seed=42):
     rng=np.random.default_rng(seed);order=rng.permutation(len(paths));cut=max(2,int(.2*len(paths)))
     val=[paths[i] for i in order[:cut]];train=[paths[i] for i in order[cut:]]
     def read(p):
-        with Image.open(p) as im:return patches(im,size)
+        with Image.open(p) as im:return extract(im,size,extractor)
     x=np.concatenate([read(p) for p in train]);scaler=StandardScaler().fit(x);x=scaler.transform(x)
     memory_bank=x[rng.choice(len(x),min(memory,len(x)),replace=False)]
-    artifact={'schema_version':1,'scaler':scaler,'memory':memory_bank,'size':size,'mode':mode,'threshold':None,'seed':seed,'normal_image_hashes':hashes,
+    artifact={'schema_version':1,'feature_extractor':extractor,'scaler':scaler,'memory':memory_bank,'size':size,'mode':mode,'threshold':None,'seed':seed,'normal_image_hashes':hashes,
               'train_files':[str(p) for p in train],'validation_files':[str(p) for p in val]}
     scores=[]
     for p in val:
@@ -36,7 +43,7 @@ def fit(paths,mode='synthetic_fixture',size=128,memory=1000,seed=42):
     return artifact
 
 def predict(artifact,image):
-    start=time.perf_counter();size=artifact['size'];x=artifact['scaler'].transform(patches(image,size))
+    start=time.perf_counter();size=artifact['size'];x=artifact['scaler'].transform(extract(image,size,artifact.get('feature_extractor','handcrafted')))
     nn=NearestNeighbors(n_neighbors=1,algorithm='brute',n_jobs=1).fit(artifact['memory'])
     distances=nn.kneighbors(x,return_distance=True)[0][:,0];score=float(distances.max());threshold=artifact['threshold']
     grid=size//16;heat=distances.reshape(grid,grid)
@@ -49,7 +56,7 @@ def predict(artifact,image):
 
 def evaluate(artifact,category):
     rows=[];root=Path(category)
-    for path in sorted((root/'test').glob('*/*.png')):
+    for path in sorted(p for p in (root/'test').glob('*/*') if p.suffix.lower() in {'.png','.jpg','.jpeg'}):
         with Image.open(path) as im:r=predict(artifact,im)
         rows.append({'file':str(path.relative_to(root)),'label':int(path.parent.name!='good'),'score':r['score'],'anomaly':r['anomaly'],'ms':r['inference_ms']})
     if not rows or len(set(r['label'] for r in rows))<2:raise ValueError('Both normal and anomaly test images required')
@@ -61,6 +68,6 @@ def evaluate(artifact,category):
             'limitations':['Handcrafted baseline, not PatchCore','No pixel-level metric','Single host CPU','No external factory validation']}
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--category',required=True);p.add_argument('--output',default='artifacts');p.add_argument('--mode',choices=['synthetic_fixture','mvtec'],required=True);p.add_argument('--size',type=int,default=128);p.add_argument('--memory',type=int,default=1000);a=p.parse_args()
-    out=Path(a.output);out.mkdir(parents=True,exist_ok=True);model=fit(list((Path(a.category)/'train/good').glob('*.png')),a.mode,a.size,a.memory)
+    p=argparse.ArgumentParser();p.add_argument('--category',required=True);p.add_argument('--output',default='artifacts');p.add_argument('--mode',choices=['synthetic_fixture','mvtec','visa'],required=True);p.add_argument('--size',type=int,default=128);p.add_argument('--memory',type=int,default=1000);a=p.parse_args()
+    out=Path(a.output);out.mkdir(parents=True,exist_ok=True);model=fit([p for p in (Path(a.category)/'train/good').iterdir() if p.suffix.lower() in {'.png','.jpg','.jpeg'}],a.mode,a.size,a.memory)
     report=evaluate(model,a.category);model['report']=report;joblib.dump(model,out/'detector.joblib');(out/'evaluation.json').write_text(json.dumps(report,indent=2));print(json.dumps({k:v for k,v in report.items() if k!='raw'}))

@@ -1,0 +1,13 @@
+{
+  "dataset": "VisA_20220922",
+  "source": "https://github.com/amazon-science/spot-diff",
+  "citation": "Zou et al. SPot-the-Difference Self-Supervised Pre-training for Anomaly Detection and Segmentation. ECCV 2022.",
+  "license": "CC BY 4.0",
+  "archive_sha256": "2eb8690c803ab37de0324772964100169ec8ba1fa3f7e94291c9ca673f40f362",
+  "split_sha256": "a48557e6033318cb90556f706196bc9d247a776a23ea51aecee5a80dd0332995",
+  "categories": [
+    "cashew",
+    "capsules",
+    "pcb1"
+  ]
+}
