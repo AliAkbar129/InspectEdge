@@ -25,7 +25,7 @@ def key(value):
 def home():return FileResponse(ROOT/'index.html')
 @app.get('/status')
 def status():
-    try:a,h=artifact();return {'ready':True,'mode':a['mode'],'sha256':h,'report':a.get('report')}
+    try:a,h=artifact();return {'ready':True,'mode':a['mode'],'feature_extractor':a.get('feature_extractor','handcrafted'),'sha256':h,'report':a.get('report')}
     except HTTPException as e:return {'ready':False,'reason':e.detail}
 @app.post('/inspect')
 async def inspect(file:UploadFile=File(...),x_station_key:str=Header(default='')):
@@ -82,7 +82,15 @@ def sync(x_station_key:str=Header(default='')):
         try:
             r=httpx.post(url+'/ingest',json={'records':records},headers={'X-Station-Key':x_station_key},timeout=5);r.raise_for_status()
         except httpx.HTTPError:raise HTTPException(503,'Central unavailable; pending inspections are retained.')
-        ids=r.json()['accepted'];expected={x['id'] for x in records}
+        try:
+            body=r.json()
+            ids=body.get('accepted') if isinstance(body,dict) else None
+            if not isinstance(ids,list) or any(not isinstance(x,str) for x in ids) or len(ids)!=len(set(ids)):
+                raise ValueError('Malformed acknowledgement')
+        except (ValueError,TypeError):
+            raise HTTPException(502,'Malformed central acknowledgement; inspections remain pending.')
+        expected={x['id'] for x in records}
         if not set(ids)<=expected:raise HTTPException(502,'Invalid central acknowledgement')
         c.executemany('UPDATE inspections SET synced=1 WHERE id=?',[(i,) for i in ids]);c.commit();return {'acknowledged':len(ids)}
     finally:c.close()
+

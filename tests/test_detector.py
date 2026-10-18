@@ -32,3 +32,20 @@ def test_ingestion_idempotency_and_conflicting_retry(tmp_path,monkeypatch):
     assert c.post('/ingest',json={'records':[record]},headers=h).status_code==200
     assert len(c.get('/history').json())==1
     assert c.post('/ingest',json={'records':[{**record,'score':3.}]},headers=h).status_code==409
+
+
+@pytest.mark.parametrize('body', [{}, [], {'accepted': 'bad'}, {'accepted': [None]}, {'accepted': ['a','a']}, {'accepted':['unknown']}])
+def test_malformed_ack_preserves_inspection(tmp_path,monkeypatch,body):
+    import server,json
+    monkeypatch.setenv('INSPECT_DB',str(tmp_path/'db'))
+    monkeypatch.setenv('INSPECT_CENTRAL_URL','http://central')
+    con=server.db();con.execute('INSERT INTO inspections VALUES (?,?,0)',('a',json.dumps({'id':'a'})));con.commit();con.close()
+    class Reply:
+        def raise_for_status(self): pass
+        def json(self): return body
+    monkeypatch.setattr(server.httpx,'post',lambda *args,**kw:Reply())
+    response=TestClient(app).post('/sync',headers={'X-Station-Key':'local-inspect-only'})
+    assert response.status_code==502
+    con=server.db()
+    try:assert con.execute('SELECT synced FROM inspections').fetchone()[0]==0
+    finally:con.close()

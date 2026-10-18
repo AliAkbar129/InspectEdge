@@ -1,4 +1,4 @@
-"""Normal-only handcrafted patch baseline. No neural weights or claimed novelty."""
+"""Normal-only patch baselines using handcrafted or optional frozen neural features."""
 import argparse,json,time,hashlib
 from pathlib import Path
 import joblib,numpy as np
@@ -71,3 +71,4 @@ if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--category',required=True);p.add_argument('--output',default='artifacts');p.add_argument('--mode',choices=['synthetic_fixture','mvtec','visa'],required=True);p.add_argument('--size',type=int,default=128);p.add_argument('--memory',type=int,default=1000);a=p.parse_args()
     out=Path(a.output);out.mkdir(parents=True,exist_ok=True);model=fit([p for p in (Path(a.category)/'train/good').iterdir() if p.suffix.lower() in {'.png','.jpg','.jpeg'}],a.mode,a.size,a.memory)
     report=evaluate(model,a.category);model['report']=report;joblib.dump(model,out/'detector.joblib');(out/'evaluation.json').write_text(json.dumps(report,indent=2));print(json.dumps({k:v for k,v in report.items() if k!='raw'}))
+
