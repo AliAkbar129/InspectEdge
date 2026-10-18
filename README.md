@@ -1,6 +1,6 @@
 # InspectEdge — normal-image inspection baseline
 
-A CPU research station with a handcrafted patch nearest-neighbor detector, computed anomaly maps, durable local inspection records, and retryable synchronization. **Not a completed factory validation or neural anomaly-detection study.**
+A CPU research station with a handcrafted patch nearest-neighbor detector, computed anomaly maps, durable local inspection records, and retryable synchronization. Includes an exploratory frozen-ResNet18 comparison on three VisA categories; not factory validation.
 
 ## Run
 
@@ -66,3 +66,8 @@ Select a category-specific model explicitly, for example set `INSPECT_MODEL` to 
 ### Executed HTTP recovery check
 
 `experiments/http_recovery.py` uploads a real image three times through the trained-model API, confirms local retention while central is unavailable, kills/restarts the edge process, then synchronizes to a separate central process. All three records were retained and their full payloads matched centrally; a repeated sync acknowledged zero new records. See [raw evidence](evidence/http_recovery.json). These are three uploads of one image, not three independent anomaly tests.
+
+
+## Finalization verification
+
+[Passing CI](https://github.com/AliAkbar129/InspectEdge/actions/runs/39147527823) covers 10 regression tests, including malformed, duplicate and unrelated synchronization acknowledgments. Invalid acknowledgments return an error without clearing pending records. The application identifies the loaded feature extractor. The evidence above describes the evaluated scope; production and external-validation extensions remain separate work.
